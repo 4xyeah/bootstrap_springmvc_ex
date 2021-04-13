@@ -23,7 +23,7 @@ import lombok.extern.log4j.Log4j;
 public class BoardControllerTests {
 	// WAS(톰캣) 반복 실행을 생략하기 위해서
 	// 스프링 테스트 기능 활용
-	
+	//d
 	@Setter(onMethod_ = {@Autowired})
 	private WebApplicationContext ctx;
 	
