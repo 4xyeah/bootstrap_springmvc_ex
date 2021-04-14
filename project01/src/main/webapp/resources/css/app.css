@@ -87,6 +87,16 @@ td a:hover {
 	padding: 0 5px 2px;
 }
 
+#searchForm select, #searchForm input[type='text'] {
+	width: 8rem;
+}
+
+#searchForm button {
+	border-radius: 0;
+	padding: 0;
+	border-bottom: 1px solid black;
+}
+
 .page-link {
 	background: none;
 	padding: 0.3rem 0.7rem;

@@ -9,6 +9,8 @@ public interface BoardMapper {
 	public List<BoardVO> getList();
 	
 	public List<BoardVO> getListWithPaging(Criteria criteria);
+	
+//	public List<BoardVO> 
 
 	public void insert(BoardVO board);
 	

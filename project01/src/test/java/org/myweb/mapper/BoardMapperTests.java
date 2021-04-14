@@ -26,15 +26,27 @@ public class BoardMapperTests {
 //		mapper.getList().forEach(board -> log.info(board));
 //	}
 	
-	@Test 
-	public void testPaging() {
+//	@Test 
+//	public void testPaging() {
+//		
+//		Criteria criteria = new Criteria();
+//		criteria.setPageNum(3);
+//		criteria.setAmount(10);
+//		List<BoardVO> list = mapper.getListWithPaging(criteria);
+//		
+//		list.forEach(board -> log.info(board.getBoard_no()));
+//	}
+	
+	@Test
+	public void testSearch() {
 		
 		Criteria criteria = new Criteria();
-		criteria.setPageNum(3);
-		criteria.setAmount(10);
+		criteria.setKeyword("테");
+		criteria.setType("TW");
+		
 		List<BoardVO> list = mapper.getListWithPaging(criteria);
 		
-		list.forEach(board -> log.info(board.getBoard_no()));
+		list.forEach(board -> log.info(board));
 	}
 	
 	

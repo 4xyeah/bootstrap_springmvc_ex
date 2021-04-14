@@ -38,7 +38,8 @@
 				</c:forEach>
 			</table>
 
-			<nav class="pull-right" aria-label="page Navigation">
+
+			<nav aria-label="page Navigation">
 				<ul class="pagination justify-content-center">
 					<c:if test="${pageMaker.prev}">
 						<li class="page-item disabled"><a class="page-link"
@@ -63,6 +64,27 @@
 			<!-- end of pageSection -->
 
 
+			<div class="row py-2">
+				<div class="col-lg-12">
+					<form id="searchForm" action="/board/list" method="get">
+						<select class="mx-1" name="type">
+							<option value="">---</option>
+							<option value="T">제목</option>
+							<option value="C">내용</option>
+							<option value="W">작성자</option>
+							<option value="TC">제목 or 내용</option>
+							<option value="TW">제목 or 작성자</option>
+							<option value="TWC">제목 or 내용 or 작성자</option>
+						</select> 
+						<input type="text" name="keyword" value="<c:out value='${pageMaker.criteria.keyword }'/>"> 
+						<input type="hidden" name="pageNum" value="${pageMaker.criteria.pageNum }"> 
+						<input type="hidden" name="amount" value="${pageMaker.criteria.amount }">
+						<input type="hidden" name="type" value="<c:out value='${pageMaker.criteria.type}'/>">
+						<button class="btn btn-default mx-1">Search</button>
+					</form>
+				</div>
+			</div>
+			<!-- end of searchForm -->
 		</div>
 		<div class="col-1 col-md-2"></div>
 	</div>
@@ -91,9 +113,10 @@
 <!-- Modal 끝 -->
 
 <form id="actionForm" action="/board/list" method="get">
-	<input type="hidden" name="pageNum"
-		value="${pageMaker.criteria.pageNum }"> <input type="hidden"
-		name="amount" value="${pageMaker.criteria.amount }">
+	<input type="hidden" name="pageNum" value="${pageMaker.criteria.pageNum }"> 
+	<input type="hidden" name="amount" value="${pageMaker.criteria.amount }">
+	<input type="hidden" name="keyword" value="<c:out value='${pageMaker.criteria.keyword }'/>">
+	<input type="hidden" name="type" value="<c:out value='${pageMaker.criteria.type}'/>">
 </form>
 
 <script>
@@ -104,7 +127,29 @@
 				let actionForm = document.getElementById('actionForm');
 				let pageLink = document.querySelectorAll('.page-link');
 				let moveLink = document.querySelectorAll('.move');
-
+				
+				let searchForm = document.querySelector("#searchForm");
+				let searchFormBtn = searchForm.querySelector("button");
+				let select = searchForm.querySelector('select');
+				
+				// 검색
+				searchFormBtn.addEventListener('click', function(e) {
+					let selectedOption = select.options.selectedIndex;
+					
+					if(!selectedOption) {
+						alert("검색 기준을 선택하세요.");
+						return false;
+					}else if(!searchForm.querySelector('input[name="keyword"]').value) {
+						alert("검색할 내용을 입력해주세요.");
+						return false;
+					}
+					
+					searchForm.querySelector('input[name="pageNum"]').value = 1;
+					e.preventDefault();
+					
+					searchForm.submit();
+					
+				});
 
 				function checkModal(result) {
 					let modalBody = document.querySelector('.modal-body');
@@ -161,6 +206,9 @@
 					actionForm.submit();
 				});
 				});
+				
+				
+				
 			});
 </script>
 </body>
