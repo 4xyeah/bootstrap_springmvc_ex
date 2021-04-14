@@ -78,6 +78,15 @@ td a:hover {
 	text-decoration: underline;
 }
 
+#regBtn {
+	display: relative;
+	background: graytext;
+	color: white;
+	border-bottom: 1px solid black;
+	border-radius: 0;
+	padding: 0 5px 2px;
+}
+
 .page-link {
 	background: none;
 	padding: 0.3rem 0.7rem;

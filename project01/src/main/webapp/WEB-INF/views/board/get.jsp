@@ -38,6 +38,8 @@
 		<form id="operForm" action="/board/modify" method="get">
 			<input type="hidden" id="board_no" name="board_no"
 				value='<c:out value="${board.board_no }"/>'>
+			<input type="hidden" name="pageNum" value='<c:out value="${criteria.pageNum }"/>'>
+			<input type="hidden" name="amount" value='<c:out value="${criteria.amount }"/>'>
 		</form>
 	</div>
 	<!-- end of form body-->
@@ -57,7 +59,7 @@
 	 location.href = '/board/list';
 	 }; */
 
-	$(document).ready(function() {
+	 document.addEventListener('DOMContentLoaded', function() {
 
 		let operForm = $('#operForm');
 

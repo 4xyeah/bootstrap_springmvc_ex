@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,8 +36,8 @@ public class BoardController {
 
 	@GetMapping("/list")
 	public void list(Criteria criteria, Model model) {
-		int total = 40;
-		
+		int total = service.getTotalData(criteria);
+		log.info("\n===========================\ntotalData:" + total + "\n==========================");
 		log.info("list: " + criteria);
 
 		model.addAttribute("list", service.getList(criteria));
@@ -65,34 +66,43 @@ public class BoardController {
 	}
 
 	// mapping시 URL 배열 처리 가능
-	@GetMapping({ "/get", "/modify" })
-	public void get(@RequestParam("board_no") Long board_no, Model model) {
-
+	@GetMapping({ "/get", "/modify" })	// 페이지 번호 유지용 @ModelAttribute
+	public void get(@RequestParam("board_no") Long board_no, @ModelAttribute("criteria") Criteria criteria, Model model) {
+		// ModelAttribute는 자동으로 Model에
+		// 지정한 이름으로 데이터를 담아줌
+		// 사용하지 않아도 파라미터가 된 객체는 전달되잠ㄴ 좀 더 명시적으로 이름을 지정하기 위해 사용함
 		log.info("/get || /modify");
 		model.addAttribute("board", service.get(board_no));
+		
 	}
 
 	@PostMapping("/modify")
-	public String modify(BoardVO board, RedirectAttributes rttr) {
+	public String modify(BoardVO board, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes rttr) {
 
 		log.info("modify:" + board);
 
 		if (service.modify(board)) {
 			rttr.addFlashAttribute("result", "success");
 		}
+		
+		rttr.addAttribute("pageNum", criteria.getPageNum());
+		rttr.addAttribute("amount", criteria.getAmount());
 
 		return "redirect:/board/list";
 	}
 
 	@PostMapping("/remove")
-	public String remove(@RequestParam("board_no") Long board_no, RedirectAttributes rttr) {
+	public String remove(@RequestParam("board_no") Long board_no, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes rttr) {
 
 		log.info("remove: " + board_no);
 
 		if (service.remove(board_no)) {
 			rttr.addFlashAttribute("result", "success");
 		}
-
+		
+		rttr.addAttribute("pageNum", criteria.getPageNum());
+		rttr.addAttribute("amount", criteria.getAmount());
+		
 		return "redirect:/board/list";
 	}
 

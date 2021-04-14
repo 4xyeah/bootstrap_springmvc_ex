@@ -22,7 +22,14 @@
 			)
 		where rn >(#{pageNum} -1) * #{amount}
 		]]>
+	</select>
 	
+	<select id="getTotalData" resultType="int">
+		<![CDATA[
+		select count(*) 
+		from board 
+		where board_no > 0	
+		]]>
 	</select>
 
 	<insert id="insert">
