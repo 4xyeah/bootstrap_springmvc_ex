@@ -1,5 +1,7 @@
 package org.myweb.domain;
 
+import org.springframework.web.util.UriComponentsBuilder;
+
 import lombok.*;
 
 @Getter
@@ -26,5 +28,20 @@ public class Criteria {
 	// 조건 검색 처리용
 	public String[] getTypeArr() {
 		return type == null ? new String[] {} : type.split("");
+	}
+	
+	
+	// 링크 생성 기능
+	// queryParam() 메서드를 이용해서 필요한 파라미터를 수비게 추가할 수 있음
+	// 한글처리도 신경쓰지 않아도 됨
+	public String getListLink() {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromPath("")
+				.queryParam("pageNum", this.pageNum)
+				.queryParam("amount", this.getAmount())
+				.queryParam("type", this.getType())
+				.queryParam("keyword", this.getKeyword());
+		
+		return builder.toUriString();
+		
 	}
 }

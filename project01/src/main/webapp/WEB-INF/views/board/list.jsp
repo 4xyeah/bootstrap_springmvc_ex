@@ -21,21 +21,35 @@
 					</tr>
 				</thead>
 				<!-- jstl을 이용해서 DB에 있는 전체 글 목록 출력  -->
-				<c:forEach items="${list}" var="board">
-					<tbody>
-						<tr class="row">
-							<td class="col-2"><c:out value="${board.board_no }" /></td>
-							<td class="col-6"><a class="move"
-								href='<c:out value="${board.board_no }" />'> <c:out
-										value="${board.board_title }" />
-							</a></td>
-							<td class="col-2"><c:out value="${board.board_writer }" /></td>
-							<!--  pattern에서 월은 'MM'으로 쓰기! 소문자로 쓰면 이상한 두자리 숫자 나옴 -->
-							<td class="col-2"><fmt:formatDate pattern="yyyy-MM-dd"
-									value="${board.board_date }" /></td>
-						</tr>
-					</tbody>
-				</c:forEach>
+				<!-- 검색 결과를 result로 받아서 결과가 있으면 출력, 없으면 없다는 문구 출력 -->
+				<c:choose>
+					<c:when test="${fail eq 'fail' }">
+						<tbody>
+							<tr class="row">
+								<td class="col-3"></td>
+								<td class="col-6 text-center">검색 결과가 존재하지 않습니다.</td>
+								<td class="col-3"></td>
+							</tr>
+						</tbody>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${list}" var="board">
+							<tbody>
+								<tr class="row">
+									<td class="col-2"><c:out value="${board.board_no }" /></td>
+									<td class="col-6"><a class="move"
+										href='<c:out value="${board.board_no }" />'> <c:out
+												value="${board.board_title }" />
+									</a></td>
+									<td class="col-2"><c:out value="${board.board_writer }" /></td>
+									<!--  pattern에서 월은 'MM'으로 쓰기! 소문자로 쓰면 이상한 두자리 숫자 나옴 -->
+									<td class="col-2"><fmt:formatDate pattern="yyyy-MM-dd"
+											value="${board.board_date }" /></td>
+								</tr>
+							</tbody>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
 			</table>
 
 
@@ -68,18 +82,31 @@
 				<div class="col-lg-12">
 					<form id="searchForm" action="/board/list" method="get">
 						<select class="mx-1" name="type">
-							<option value="">---</option>
-							<option value="T">제목</option>
-							<option value="C">내용</option>
-							<option value="W">작성자</option>
-							<option value="TC">제목 or 내용</option>
-							<option value="TW">제목 or 작성자</option>
-							<option value="TWC">제목 or 내용 or 작성자</option>
-						</select> 
-						<input type="text" name="keyword" value="<c:out value='${pageMaker.criteria.keyword }'/>"> 
-						<input type="hidden" name="pageNum" value="${pageMaker.criteria.pageNum }"> 
-						<input type="hidden" name="amount" value="${pageMaker.criteria.amount }">
-						<input type="hidden" name="type" value="<c:out value='${pageMaker.criteria.type}'/>">
+							<!-- 선택된 option 에 selected를 넣기  -->
+							<option value=""
+								<c:out value="${pageMaker.criteria.type == null? 'selected':''}"/>>---</option>
+							<option value="T"
+								<c:out value="${pageMaker.criteria.type eq 'T'? 'selected':''}"/>>제목</option>
+							<option value="C"
+								<c:out value="${pageMaker.criteria.type eq 'C'? 'selected':''}"/>>내용</option>
+							<option value="W"
+								<c:out value="${pageMaker.criteria.type eq 'W'? 'selected':''}"/>>작성자</option>
+							<option value="TC"
+								<c:out value="${pageMaker.criteria.type eq 'TC'? 'selected':''}"/>>제목
+								or 내용</option>
+							<option value="TW"
+								<c:out value="${pageMaker.criteria.type eq 'TW'? 'selected':''}"/>>제목
+								or 작성자</option>
+							<option value="TWC"
+								<c:out value="${pageMaker.criteria.type eq 'TWC'? 'selected':''}"/>>제목
+								or 내용 or 작성자</option>
+						</select> <input type="text" name="keyword"
+							value="<c:out value='${pageMaker.criteria.keyword }'/>">
+						<input type="hidden" name="pageNum"
+							value="${pageMaker.criteria.pageNum }"> <input
+							type="hidden" name="amount" value="${pageMaker.criteria.amount }">
+						<input type="hidden" name="type"
+							value="<c:out value='${pageMaker.criteria.type}'/>">
 						<button class="btn btn-default mx-1">Search</button>
 					</form>
 				</div>
@@ -93,17 +120,19 @@
 <!-- Modal 영역 -->
 <div class="modal fade" tabindex="-1" id="myModal" role="dialog"
 	aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="myModalLabel">게시글 처리 완료</h5>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
+				<button type="button"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
 			<div class="modal-body">처리가 완료됐습니다.</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
+				<button type="button" class="btn btn-default">Close</button>
+				<!--  <button type="button" class="btn btn-primary">Save changes</button>-->
 			</div>
 		</div>
 		<!-- Modal Content -->
@@ -113,10 +142,13 @@
 <!-- Modal 끝 -->
 
 <form id="actionForm" action="/board/list" method="get">
-	<input type="hidden" name="pageNum" value="${pageMaker.criteria.pageNum }"> 
-	<input type="hidden" name="amount" value="${pageMaker.criteria.amount }">
-	<input type="hidden" name="keyword" value="<c:out value='${pageMaker.criteria.keyword }'/>">
-	<input type="hidden" name="type" value="<c:out value='${pageMaker.criteria.type}'/>">
+	<input type="hidden" name="pageNum"
+		value="${pageMaker.criteria.pageNum }"> <input type="hidden"
+		name="amount" value="${pageMaker.criteria.amount }"> <input
+		type="hidden" name="keyword"
+		value="<c:out value='${pageMaker.criteria.keyword }'/>"> <input
+		type="hidden" name="type"
+		value="<c:out value='${pageMaker.criteria.type}'/>">
 </form>
 
 <script>
@@ -134,6 +166,7 @@
 				
 				// 검색
 				searchFormBtn.addEventListener('click', function(e) {
+					history.replaceState({}, null, null);
 					let selectedOption = select.options.selectedIndex;
 					
 					if(!selectedOption) {
@@ -153,7 +186,7 @@
 
 				function checkModal(result) {
 					let modalBody = document.querySelector('.modal-body');
-					let modal = document.getElementById('myModal')
+					let modal = document.querySelector('#myModal');
 					if (result === '' || history.state)
 						return;
 
@@ -163,7 +196,8 @@
 						console.log(modalBody.innerHTML);
 						result = '';
 					}
-					$(modal).modal('show');
+					let myModal = new bootstrap.Modal(document.getElementById('myModal'))
+					myModal.show();
 				}
 				
 				checkModal(result);
@@ -180,6 +214,7 @@
 				pageLink.forEach(item => {
 					
 					item.addEventListener('click', function(e) {
+						history.replaceState({}, null, null);
 						e.preventDefault();
 						//console.log(this.getAttribute('href'));
 						actionForm.querySelector("input[name='pageNum']").value = this.getAttribute('href');
@@ -189,8 +224,10 @@
 				
 				// 제목 클릭 후 목록으로 돌아오면
 				// 원래 보고있던 목록 페이지로 돌아오게 만들기
-				Array.from(moveLink).forEach(item => {
+				moveLink.forEach(item => {
+					
 				item.addEventListener('click', function(e) {
+					history.replaceState({}, null, null);
 					e.preventDefault();
 					//console.log(this.getAttribute('href'));
 					console.log(actionForm);

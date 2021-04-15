@@ -29,10 +29,10 @@
 					class="form-control" id="board_writer" name="board_writer"
 					value='<c:out value="${board.board_writer }"/>' readonly="readonly">
 			</div>
-			<input type="hidden" name="pageNum"
-				value='<c:out value="${criteria.pageNum }"/>'> <input
-				type="hidden" name="amount"
-				value='<c:out value="${criteria.amount }"/>'>
+			<input type="hidden" name="pageNum" value='<c:out value="${criteria.pageNum }"/>'> 
+			<input type="hidden" name="amount" value='<c:out value="${criteria.amount }"/>'>
+			<input type="hidden" name="keyword" value='<c:out value="${criteria.keyword }"/>'>
+			<input type="hidden" name="type" value='<c:out value="${criteria.type }"/>'>
 
 			<div class="col-12 text-center text-md-start">
 				<button type="submit" data-oper='modify'
@@ -50,7 +50,7 @@
 </section>
 </main>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function() {
 		let formObj = document.querySelector('form');
 		
 		let btns = document.querySelectorAll('button');
@@ -71,6 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					
 					let pageNumEl = Object.assign(document.querySelector("input[name='pageNum']"));
 					let amountEl = Object.assign(document.querySelector("input[name='amount']"));
+					let keywordEl = Object.assign(document.querySelector("input[name='keyword']"));
+					let typeEl = Object.assign(document.querySelector("input[name='type']"));
 					
 					console.log(pageNumEl);
 					console.log(amountEl);
@@ -81,6 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					
 					formObj.append(pageNumEl);
 					formObj.append(amountEl);
+					formObj.append(keywordEl);
+					formObj.append(typeEl);
 
 				}
 				formObj.submit();

@@ -39,7 +39,10 @@ public class BoardController {
 		int total = service.getTotalData(criteria);
 		log.info("\n===========================\ntotalData:" + total + "\n==========================");
 		log.info("list: " + criteria);
-
+		
+		if(total==0) {
+			model.addAttribute("fail", "fail");
+		}
 		model.addAttribute("list", service.getList(criteria));
 		model.addAttribute("pageMaker", new PageDTO(criteria, total));
 	}
@@ -85,10 +88,8 @@ public class BoardController {
 			rttr.addFlashAttribute("result", "success");
 		}
 		
-		rttr.addAttribute("pageNum", criteria.getPageNum());
-		rttr.addAttribute("amount", criteria.getAmount());
-
-		return "redirect:/board/list";
+	
+		return "redirect:/board/list" + criteria.getListLink();
 	}
 
 	@PostMapping("/remove")
@@ -100,10 +101,7 @@ public class BoardController {
 			rttr.addFlashAttribute("result", "success");
 		}
 		
-		rttr.addAttribute("pageNum", criteria.getPageNum());
-		rttr.addAttribute("amount", criteria.getAmount());
-		
-		return "redirect:/board/list";
+		return "redirect:/board/list" + criteria.getListLink();
 	}
 
 }

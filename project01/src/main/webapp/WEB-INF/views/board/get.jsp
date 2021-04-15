@@ -8,7 +8,7 @@
 		<h1 class="my-5 table-title">Board Read</h1>
 		<div class="col-12">
 			<label for="board_no" class="form-label">Board No.</label> <input
-				class="form-control" id="board_no" name="board_no"
+				class="form-control" name="board_no"
 				value='<c:out value="${board.board_no }"/>' readonly="readonly">
 		</div>
 		<div class="col-12">
@@ -36,10 +36,11 @@
 
 		<!-- form 처리 -->
 		<form id="operForm" action="/board/modify" method="get">
-			<input type="hidden" id="board_no" name="board_no"
-				value='<c:out value="${board.board_no }"/>'>
+			<input type="hidden" id="board_no" name="board_no" value='<c:out value="${board.board_no }"/>'>
 			<input type="hidden" name="pageNum" value='<c:out value="${criteria.pageNum }"/>'>
 			<input type="hidden" name="amount" value='<c:out value="${criteria.amount }"/>'>
+			<input type="hidden" name="keyword" value='<c:out value="${criteria.keyword }"/>'>
+			<input type="hidden" name="type" value='<c:out value="${criteria.type }"/>'>
 		</form>
 	</div>
 	<!-- end of form body-->
@@ -61,17 +62,19 @@
 
 	 document.addEventListener('DOMContentLoaded', function() {
 
-		let operForm = $('#operForm');
-
-		$('button[data-oper="modify"]').on('click', function(e) {
-
-			operForm.attr('action', '/board/modify').submit();
+		let operForm = document.querySelector('#operForm');
+		let modifyBtn = document.querySelector('button[data-oper="modify"]');
+		let listBtn = document.querySelector('button[data-oper="list"]');
+	
+		modifyBtn.addEventListener('click', function(e) {
+			operForm.setAttribute('action', '/board/modify');
+			operForm.submit();
 		});
 
-		$('button[data-oper="list"]').on('click', function(e) {
+		listBtn.addEventListener('click', function(e) {
 
-			operForm.find('#board_no').remove();
-			operForm.attr('action', '/board/list');
+			operForm.removeChild(document.querySelector('#board_no'));
+			operForm.setAttribute('action', '/board/list');
 			operForm.submit();
 		});
 
